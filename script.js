@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mobile Menu Toggle
     const menuToggle = document.querySelector('.mobile-menu-toggle');
     const navbar = document.querySelector('.navbar');
+    const navMenu = document.querySelector('.nav-menu');
     
     if (menuToggle) {
         menuToggle.addEventListener('click', function() {
@@ -23,27 +24,52 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 navbar.appendChild(mobileMenu);
                 
-                // Animate toggle icon
-                this.querySelector('span:first-child').style.transform = 'rotate(45deg) translate(3px, 3px)';
-                this.querySelector('span:last-child').style.transform = 'rotate(-45deg) translate(3px, -3px)';
-                
                 // Prevent page scrolling
                 document.body.style.overflow = 'hidden';
+                
+                // Adaugă event listeners pentru link-urile din meniul mobil
+                const mobileLinks = mobileMenu.querySelectorAll('a');
+                mobileLinks.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        // Închide meniul mobil când se face click pe un link
+                        closeMobileMenu();
+                    });
+                });
             } else {
-                // Remove mobile menu
-                const mobileMenu = document.querySelector('.mobile-menu');
-                if (mobileMenu) {
-                    navbar.removeChild(mobileMenu);
-                }
-                
-                // Reset toggle icon
-                this.querySelector('span:first-child').style.transform = 'none';
-                this.querySelector('span:last-child').style.transform = 'none';
-                
-                // Allow page scrolling
-                document.body.style.overflow = 'auto';
+                closeMobileMenu();
             }
         });
+    }
+    
+    // Funcția pentru închiderea meniului mobil
+    function closeMobileMenu() {
+        // Resetează starea butonului toggle
+        if (menuToggle) {
+            menuToggle.classList.remove('active');
+        }
+        
+        // Adaugă animația de ieșire și elimină meniul după finalizarea animației
+        const mobileMenu = document.querySelector('.mobile-menu');
+        if (mobileMenu) {
+            // Adaugă clasa pentru animația de ieșire
+            mobileMenu.classList.add('closing');
+            
+            // Așteaptă finalizarea animației înainte de a elimina meniul
+            setTimeout(() => {
+                navbar.removeChild(mobileMenu);
+                // Resetează starea altor elemente și permite scroll-ul
+                document.body.style.overflow = 'auto';
+                if (navMenu) {
+                    navMenu.classList.remove('active');
+                }
+            }, 300); // Durata animației este de 300ms
+        } else {
+            // Resetează starea altor elemente și permite scroll-ul dacă nu există meniul
+            document.body.style.overflow = 'auto';
+            if (navMenu) {
+                navMenu.classList.remove('active');
+            }
+        }
     }
     
     // Smooth Scrolling for anchor links
@@ -60,10 +86,8 @@ document.addEventListener('DOMContentLoaded', function() {
             if (targetElement) {
                 // Close mobile menu if open
                 const mobileMenu = document.querySelector('.mobile-menu');
-                const menuToggle = document.querySelector('.mobile-menu-toggle');
-                
-                if (mobileMenu && menuToggle.classList.contains('active')) {
-                    menuToggle.click();
+                if (mobileMenu) {
+                    closeMobileMenu();
                 }
                 
                 // Scroll to target element
@@ -341,7 +365,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Sticky Navbar and Functionalities
     const navLinks = document.querySelectorAll('.nav-menu a');
     const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-    const navMenu = document.querySelector('.nav-menu');
     const sections = document.querySelectorAll('section');
     
     // Function to make navbar sticky on scroll
@@ -379,24 +402,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Function for mobile menu
-    function toggleMobileMenu() {
-        mobileMenuToggle.classList.toggle('active');
-        navMenu.classList.toggle('active');
-        
-        // Add/remove scroll to body when menu is opened/closed
-        if (navMenu.classList.contains('active')) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = '';
-        }
-    }
-    
     // Close mobile menu when clicking on a link
     navLinks.forEach(link => {
         link.addEventListener('click', function() {
-            if (navMenu.classList.contains('active')) {
-                toggleMobileMenu();
+            if (navMenu && navMenu.classList.contains('active')) {
+                closeMobileMenu();
             }
         });
         
@@ -455,9 +465,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Event listeners
     window.addEventListener('scroll', handleScroll);
-    if (mobileMenuToggle) {
-        mobileMenuToggle.addEventListener('click', toggleMobileMenu);
-    }
     
     // Initialize functions
     handleScroll(); // To set initial state

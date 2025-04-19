@@ -137,6 +137,23 @@ img {
     transition: all 0.3s ease;
 }
 
+/* Styles for the logo image */
+.logo-image {
+    height: 70px; /* Mărit de la 40px la 50px */
+    width: auto;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+.navbar.scrolled .logo-image {
+    height: 44px; /* Mărit de la 36px la 44px */
+}
+
+.navbar .logo:hover .logo-image {
+    transform: scale(1.05);
+    filter: brightness(1.2);
+}
+
 .navbar .logo::after {
     content: '';
     position: absolute;
@@ -252,66 +269,119 @@ img {
 .mobile-menu-toggle {
     display: none;
     cursor: pointer;
-    width: 30px;
-    height: 20px;
+    width: 32px; /* Mărit de la 24px la 32px */
+    height: 32px; /* Mărit de la 24px la 32px */
     position: relative;
-    flex-direction: column;
-    justify-content: space-between;
+    z-index: 1001; /* Asigură că butonul este deasupra meniului */
+    margin-left: auto;
 }
 
 .mobile-menu-toggle span {
     display: block;
-    width: 24px;
-    height: 2px;
-    background-color: var(--text-color);
-    margin: 5px 0;
-    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    width: 100%;
+    height: 3px; /* Mărit de la 2px la 3px pentru linii mai groase */
+    background-color: #fff; /* Culoare albă pentru contrast mai bun */
+    transition: all 0.4s ease; /* Tranziție puțin mai lentă pentru un efect mai fluid */
+    position: absolute;
+    left: 0;
+}
+
+.mobile-menu-toggle span:nth-child(1) {
+    top: 10px; /* Ajustat pentru noul size */
+}
+
+.mobile-menu-toggle span:nth-child(2) {
+    bottom: 10px; /* Ajustat pentru noul size */
 }
 
 .mobile-menu-toggle.active span:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px);
+    transform: rotate(45deg);
+    top: 14px; /* Centrat pentru noul size */
+    background-color: var(--primary-color); /* Culoare accent când este activ */
 }
 
 .mobile-menu-toggle.active span:nth-child(2) {
-    transform: rotate(-45deg) translate(1px, -1px);
+    transform: rotate(-45deg);
+    bottom: 15px; /* Centrat pentru noul size */
+    background-color: var(--primary-color); /* Culoare accent când este activ */
 }
 
 /* Optimizare pentru dispozitive mobile */
 @media (max-width: 992px) {
     .nav-menu {
-        position: fixed;
-        top: 70px;
-        left: 0;
-        right: 0;
-        background-color: var(--secondary-color-darker);
-        padding: 20px;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        transform: translateY(-150%);
-        transition: transform 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
-        z-index: 900;
-    }
-    
-    .nav-menu.active {
-        transform: translateY(0);
-    }
-    
-    .nav-menu ul {
-        flex-direction: column;
-        gap: 20px;
+        display: none; /* Ascunde meniul standard pe dispozitive mobile */
     }
     
     .mobile-menu-toggle {
-        display: block;
+        display: block; /* Afișează butonul burger pe dispozitive mobile */
+        margin-right: 24px; /* Spațiu până la dreapta */
     }
     
     .nav-cta {
-        display: none;
+        display: none; /* Ascunde butonul CTA pe dispozitive mobile */
     }
     
     .navbar.scrolled .nav-menu {
         top: 62px; /* Adjustment for smaller navbar when scrolled */
     }
+}
+
+/* Mobile Menu */
+.mobile-menu {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 64px);
+    background-color: var(--background-color);
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 24px;
+    transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    animation: mobileMenuFadeIn 0.3s ease forwards;
+}
+
+@keyframes mobileMenuFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mobile-menu .nav-menu {
+    display: block !important; /* Afișează meniul în containerul mobil */
+}
+
+.mobile-menu .nav-menu ul {
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+.mobile-menu .nav-menu a {
+    font-size: 20px;
+    display: block;
+    padding: 12px 0;
+    text-align: center;
+}
+
+.mobile-menu .nav-cta {
+    display: block !important; /* Afișează butonul CTA în meniul mobil */
+    margin-top: 32px;
+}
+
+.mobile-menu .nav-cta .btn {
+    padding: 12px 24px;
+    font-size: 18px;
 }
 
 /* Subtle glitch effect for logo hover */
@@ -338,36 +408,6 @@ img {
 
 .navbar .logo:hover {
     animation: glitch 0.5s cubic-bezier(.25, .46, .45, .94) both;
-}
-
-/* Mobile Menu */
-.mobile-menu {
-    position: fixed;
-    top: 64px;
-    left: 0;
-    width: 100%;
-    height: calc(100vh - 64px);
-    background-color: var(--background-color);
-    z-index: 999;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 40px 24px;
-}
-
-.mobile-menu .nav-menu ul {
-    flex-direction: column;
-    align-items: center;
-    gap: 24px;
-}
-
-.mobile-menu .nav-menu a {
-    font-size: 20px;
-}
-
-.mobile-menu .nav-cta {
-    margin-top: 32px;
 }
 
 /* Updated styles for pure images with custom positioning */
